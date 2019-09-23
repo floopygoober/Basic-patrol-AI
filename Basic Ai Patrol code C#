@@ -1,0 +1,73 @@
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
+    public class Enemy_Move : MonoBehaviour {
+
+    //	public int EnemySpeed;
+    //	public int XMoveDirection;
+    //	private bool facingRight = true;
+    //
+    //	// Update is called once per frame
+    //	void Update () {
+    //		RaycastHit2D hit = Physics2D.Raycast (transform.position, new Vector2 (XMoveDirection, 0));
+    //		gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (XMoveDirection, 0) * EnemySpeed;
+    //
+    //		if (hit.distance < 0.f) {
+    //			Flip ();
+    //		}
+    //	}
+    //
+    //	void Flip()	{
+    //		if (XMoveDirection > 0) {
+    //			XMoveDirection = -1;
+    //			facingRight = !facingRight;
+    //			Vector2 localScale = gameObject.transform.localScale;
+    //			localScale.x *= -1;
+    //			transform.localScale = localScale;
+    //		}
+    //
+    //		else {
+    //			XMoveDirection = 1;
+    //			facingRight = !facingRight;
+    //			Vector2 localScale = gameObject.transform.localScale;
+    //			localScale.x *= -1;
+    //			transform.localScale = localScale;
+    //		}
+    //	}
+    
+	    private Rigidbody2D rigid;
+	    private Animator anim;
+	    private SpriteRenderer sp;
+	    public float enemySpeed = 50.0f;
+
+	    void Start (){
+		    rigid = GetComponent<Rigidbody2D> ();
+		    anim = GetComponent<Animator>();
+		    sp = GetComponent<SpriteRenderer>();
+	    }
+
+        void kill()
+        {
+            Destroy(this.gameObject);
+        }
+
+        void Update (){
+		    rigid.velocity = new Vector2(enemySpeed, 0);
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+                kill();
+        }
+
+	    void OnCollisionEnter2D(Collision2D other){
+		    if (other.gameObject.tag == "Wall" || other.gameObject.tag == "Enemy" || other.gameObject.tag == "Player") {
+			    enemySpeed = -enemySpeed;
+		    }
+
+            if (other.gameObject.tag == "Respawn") {
+                kill();
+            }
+	    }
+    }
